@@ -160,7 +160,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             nextGameState = gameState.generateSuccessor(agent, action)
             # If it's the last ghost, next turn is Pacman's; otherwise, next turn is the next ghost's
             next_agent = 0 if agent == gameState.getNumAgents() - 1 else agent + 1
-            next_depth = depth if next_agent != 0 else depth - 1
+            next_depth = depth - 1 if next_agent == 0 else depth
             # Only cares about the value of the score, not the action, so the action of the tuple is ignored
             value, _ = self.minimax(nextGameState, next_depth, next_agent)
 
