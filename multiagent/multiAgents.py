@@ -151,13 +151,13 @@ class MinimaxAgent(MultiAgentSearchAgent):
         #iterates through all legal actions for the current ghost
         for action in gameState.getLegalActions(agent):
             #generate the successor game state after the current agent takes an action
-            successor = gameState.generateSuccessor(agent, action)
+            newGameState = gameState.generateSuccessor(agent, action)
             #if it is still a ghost's turn, call min recursively for the next ghost
             if agent < gameState.getNumAgents() - 1:
-                value = self.min(successor, depth, agent + 1)
+                value = self.min(newGameState, depth, agent + 1)
             #if all ghosts have moved do pacmans turn and remove 1 from depth
             else:
-                value = self.max(successor, depth - 1)
+                value = self.max(newGameState, depth - 1)
             min_value = min(min_value,value)
 
         #return the minimum value from the list of results
@@ -175,13 +175,13 @@ class MinimaxAgent(MultiAgentSearchAgent):
         # Iterate through all legal actions for Pacman (agent 0)
         for action in gameState.getLegalActions(0):
             # Generate the successor game state after Pacman takes the action
-            successor = gameState.generateSuccessor(0, action)
+            newGameState = gameState.generateSuccessor(0, action)
             # Call min function for the first ghost (agent 1)
-            min_value = self.min(successor, depth, 1)
+            ghost_value = self.min(newGameState, depth, 1)
             
             # Update the best score and action if a better score is found
-            if min_value > best_score:
-                best_score = min_value
+            if ghost_value > best_score:
+                best_score = ghost_value
                 best_action = action
 
         # If at the initial depth level, return the action corresponding to the maximum score
