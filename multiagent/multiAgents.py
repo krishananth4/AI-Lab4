@@ -156,7 +156,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         # Iterate through all legal actions for the current ghost
         for action in gameState.getLegalActions(agent):
-            # Generate the successor game state after the current agent takes an action
+            # Generate the next game state after the current agent takes an action
             nextGameState = gameState.generateSuccessor(agent, action)
             # If it's the last ghost, next turn is Pacman's; otherwise, next turn is the next ghost's
             next_agent = 0 if agent == gameState.getNumAgents() - 1 else agent + 1
@@ -176,7 +176,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         # Iterate through all legal actions for Pacman
         for action in gameState.getLegalActions(0):
-            # Generate the successor game state after Pacman takes an action
+            # Generate the next game state after Pacman takes an action
             nextGameState = gameState.generateSuccessor(0, action)
             # Call minimax for the first ghost (agent 1)
             value, _ = self.minimax(nextGameState, depth, 1)
