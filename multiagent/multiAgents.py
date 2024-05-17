@@ -142,7 +142,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         return self.max(gameState, self.depth)
 
     def min(self, gameState, depth, agent):
-        result = []
+        min_value = float('inf')
         #base case, stops at leaf node
         if MinimaxAgent.atLeaf(gameState, depth):
             #returning score of actions
@@ -154,13 +154,14 @@ class MinimaxAgent(MultiAgentSearchAgent):
             successor = gameState.generateSuccessor(agent, action)
             #if it is still a ghost's turn, call min recursively for the next ghost
             if agent < gameState.getNumAgents() - 1:
-                result.append(self.min(successor, depth, agent + 1))
+                value = self.min(successor, depth, agent + 1)
             #if all ghosts have moved do pacmans turn and remove 1 from depth
             else:
-                result.append(self.max(successor, depth - 1))
+                value = self.max(successor, depth - 1)
+            min_value = min(min_value,value)
 
         #return the minimum value from the list of results
-        return min(result)
+        return min_value
 
     def max(self, gameState, depth):
         result = {}
