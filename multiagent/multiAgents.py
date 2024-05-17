@@ -164,7 +164,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             # Only cares about the value of the score, not the action, so the action of the tuple is ignored
             value, _ = self.minimax(nextGameState, next_depth, next_agent)
 
-            # Update the minimum value and best action
+            # Update the minimum value
             if value < min_value:
                 min_value = value
 
