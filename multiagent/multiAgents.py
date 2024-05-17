@@ -187,9 +187,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         # If at the initial depth level, return the action corresponding to the maximum score
         if depth == self.depth:
             return best_action
-
-        # Otherwise, return the maximum score
-        return best_score
+        else:
+            # Otherwise, return the maximum score
+            return best_score
 
     #returns true if the game has ended or at depth of 0
     def atLeaf(gameState, depth):
