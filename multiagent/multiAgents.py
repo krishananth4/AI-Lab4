@@ -135,68 +135,61 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-        # util.raiseNotDefined()
-    # our code start
-        #pacman is agent 0, ghosts are +1 to total of 3 ghosts
-        #call max function to search for best action during game state for pacman
-        return self.max(gameState, self.depth)
+        # Call max to start the minimax search for Pacman's best action
+        return self.minimax(gameState, self.depth, 0)[1]
+
+    def minimax(self, gameState, depth, agent):
+        # Base case: Check terminal conditions
+        if MinimaxAgent.atLeaf(gameState, depth):
+            return self.evaluationFunction(gameState), None
+
+        # Pacman's turn (maximizing player)
+        if agent == 0:
+            return self.max(gameState, depth)
+        # Ghosts' turn (minimizing players)
+        else:
+            return self.min(gameState, depth, agent)
 
     def min(self, gameState, depth, agent):
         min_value = float('inf')
-        #base case, stops at leaf node
-        if MinimaxAgent.atLeaf(gameState, depth):
-            #returning score of actions
-            return self.evaluationFunction(gameState)
-
-        #iterates through all legal actions for the current ghost
-        for action in gameState.getLegalActions(agent):
-            #generate the successor game state after the current agent takes an action
-            newGameState = gameState.generateSuccessor(agent, action)
-            #if it is still a ghost's turn, call min recursively for the next ghost
-            if agent < gameState.getNumAgents() - 1:
-                value = self.min(newGameState, depth, agent + 1)
-            #if all ghosts have moved do pacmans turn and remove 1 from depth
-            else:
-                value = self.max(newGameState, depth - 1)
-            min_value = min(min_value,value)
-
-        #return the minimum value 
-        return min_value
-
-    def max(self, gameState, depth):
-    # Check terminal conditions: win, lose, or depth limit
-        if MinimaxAgent.atLeaf(gameState, depth):
-            return self.evaluationFunction(gameState)
-
-        # Initialize variables for tracking the best score and corresponding action
-        best_score = float('-inf')
         best_action = None
 
-        # Iterate through all legal actions for Pacman (agent 0)
-        for action in gameState.getLegalActions(0):
-            # Generate the successor game state after Pacman takes the action
-            newGameState = gameState.generateSuccessor(0, action)
-            # Call min function for the first ghost (agent 1)
-            ghost_value = self.min(newGameState, depth, 1)
-            
-            # Update the best score and action if a better score is found
-            if ghost_value > best_score:
-                best_score = ghost_value
+        # Iterate through all legal actions for the current ghost
+        for action in gameState.getLegalActions(agent):
+            # Generate the successor game state after the current agent takes an action
+            newGameState = gameState.generateSuccessor(agent, action)
+            # If it's the last ghost, next turn is Pacman's; otherwise, next turn is the next ghost's
+            next_agent = 0 if agent == gameState.getNumAgents() - 1 else agent + 1
+            next_depth = depth if next_agent != 0 else depth - 1
+            value, _ = self.minimax(newGameState, next_depth, next_agent)
+
+            # Update the minimum value and best action
+            if value < min_value:
+                min_value = value
                 best_action = action
 
-        # If at the initial depth level, return the action corresponding to the maximum score
-        if depth == self.depth:
-            return best_action
-        else:
-            # Otherwise, return the maximum score
-            return best_score
+        return min_value, best_action
 
-    #returns true if the game has ended or at depth of 0
+    def max(self, gameState, depth):
+        max_value = float('-inf')
+        best_action = None
+
+        # Iterate through all legal actions for Pacman
+        for action in gameState.getLegalActions(0):
+            # Generate the successor game state after Pacman takes an action
+            newGameState = gameState.generateSuccessor(0, action)
+            # Call minimax for the first ghost (agent 1)
+            value, _ = self.minimax(newGameState, depth, 1)
+
+            # Update the maximum value and best action
+            if value > max_value:
+                max_value = value
+                best_action = action
+
+        return max_value, best_action
+
     def atLeaf(gameState, depth):
-        if(gameState.isLose() or gameState.isWin() or depth == 0):
-            return True
-        else:
-            return False
+        return gameState.isLose() or gameState.isWin() or depth == 0
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
