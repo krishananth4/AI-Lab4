@@ -152,6 +152,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             return self.min(gameState, depth, agent)
 
     def min(self, gameState, depth, agent):
+        # Intialize the min_value for positive infinity
         min_value = float('inf')
 
         # Iterate through all legal actions for the current ghost
@@ -171,6 +172,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         return min_value, None
 
     def max(self, gameState, depth):
+        # Initialize the max_value to positive infinity
         max_value = float('-inf')
         best_action = None
 
@@ -181,7 +183,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             # Call minimax for the first ghost (agent 1)
             value, _ = self.minimax(nextGameState, depth, 1)
 
-            # Update the maximum value and best action
+            # Update the maximum value and best action if the value is greater than the current stored maximum value
             if value > max_value:
                 max_value = value
                 best_action = action
