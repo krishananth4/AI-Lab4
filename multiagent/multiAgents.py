@@ -141,7 +141,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
     def minimax(self, gameState, depth, agent):
         # Base case: Check terminal conditions
-        if MinimaxAgent.atLeaf(gameState, depth):
+        if gameState.isLose() or gameState.isWin() or depth == 0:
             return self.evaluationFunction(gameState), None
 
         # Pacman's turn (maximizing player)
@@ -187,9 +187,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 best_action = action
 
         return max_value, best_action
-
-    def atLeaf(gameState, depth):
-        return gameState.isLose() or gameState.isWin() or depth == 0
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
