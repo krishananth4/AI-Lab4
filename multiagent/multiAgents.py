@@ -137,6 +137,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         # Call max to start the minimax search for Pacman's best action
         return self.minimax(gameState, self.depth, 0)[1]
+        # [1] is used to get only the action part of the tuple
 
     def minimax(self, gameState, depth, agent):
         # Base case: Check terminal conditions
@@ -157,11 +158,12 @@ class MinimaxAgent(MultiAgentSearchAgent):
         # Iterate through all legal actions for the current ghost
         for action in gameState.getLegalActions(agent):
             # Generate the successor game state after the current agent takes an action
-            newGameState = gameState.generateSuccessor(agent, action)
+            nextGameState = gameState.generateSuccessor(agent, action)
             # If it's the last ghost, next turn is Pacman's; otherwise, next turn is the next ghost's
             next_agent = 0 if agent == gameState.getNumAgents() - 1 else agent + 1
             next_depth = depth if next_agent != 0 else depth - 1
-            value, _ = self.minimax(newGameState, next_depth, next_agent)
+            # Only cares about the value of the score, not the action, so the action of the tuple is ignored
+            value, _ = self.minimax(nextGameState, next_depth, next_agent)
 
             # Update the minimum value and best action
             if value < min_value:
@@ -177,9 +179,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         # Iterate through all legal actions for Pacman
         for action in gameState.getLegalActions(0):
             # Generate the successor game state after Pacman takes an action
-            newGameState = gameState.generateSuccessor(0, action)
+            nextGameState = gameState.generateSuccessor(0, action)
             # Call minimax for the first ghost (agent 1)
-            value, _ = self.minimax(newGameState, depth, 1)
+            value, _ = self.minimax(nextGameState, depth, 1)
 
             # Update the maximum value and best action
             if value > max_value:
