@@ -160,7 +160,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 value = self.max(newGameState, depth - 1)
             min_value = min(min_value,value)
 
-        #return the minimum value from the list of results
+        #return the minimum value 
         return min_value
 
     def max(self, gameState, depth):
