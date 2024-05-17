@@ -164,25 +164,32 @@ class MinimaxAgent(MultiAgentSearchAgent):
         return min_value
 
     def max(self, gameState, depth):
-        result = {}
-        scores = []
-        #base case, stops at leaf node
+    # Check terminal conditions: win, lose, or depth limit
         if MinimaxAgent.atLeaf(gameState, depth):
-            #returning score of actions
             return self.evaluationFunction(gameState)
-        if depth > 0:
-            #iterate through all legal actions for Pacman
-            for action in gameState.getLegalActions(0):
-                #generate the successor game state after Pacman takes an action and call min for the first ghost
-                minVal  = self.min(gameState.generateSuccessor(0, action), depth, 1)
-                scores.append(minVal)
-                result[minVal] = action
-        #if at the initial depth level, return the action corresponding to the maximum score
-        if depth is self.depth:
-            return result[max(scores)]
-        #otherwise, return the maximum score
-        elif list:
-            return max(scores)
+
+        # Initialize variables for tracking the best score and corresponding action
+        best_score = float('-inf')
+        best_action = None
+
+        # Iterate through all legal actions for Pacman (agent 0)
+        for action in gameState.getLegalActions(0):
+            # Generate the successor game state after Pacman takes the action
+            successor = gameState.generateSuccessor(0, action)
+            # Call min function for the first ghost (agent 1)
+            min_value = self.min(successor, depth, 1)
+            
+            # Update the best score and action if a better score is found
+            if min_value > best_score:
+                best_score = min_value
+                best_action = action
+
+        # If at the initial depth level, return the action corresponding to the maximum score
+        if depth == self.depth:
+            return best_action
+
+        # Otherwise, return the maximum score
+        return best_score
 
     #returns true if the game has ended or at depth of 0
     def atLeaf(gameState, depth):
@@ -191,7 +198,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
         else:
             return False
 
-    # our code end
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
